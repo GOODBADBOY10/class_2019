@@ -454,13 +454,17 @@
             if (i >= 0 && i < srcs.length - 1) { audio.src = srcs[i + 1]; if (!muted) audio.play().catch(function () { }); }
             else if (!muted) { startBeat(); }
         };
+        audio.src = srcs[0];
         function play() { if (useB) { if (ac) ac.resume(); } else audio.play().catch(function () { }); }
         function stop() { if (useB) { if (ac) ac.suspend(); } else audio.pause(); }
+        
         document.getElementById("splash").onclick = function () {
             this.style.display = "none"; started = true;
             var mb = document.getElementById("mute"); mb.style.display = "block";
-            audio.src = srcs[0]; audio.play().catch(function () { });
+                audio.play().catch(function () { });
+            // audio.src = srcs[0]; audio.play().catch(function () { });
         };
+        
         document.getElementById("mute").onclick = function () {
             muted = !muted; this.textContent = muted ? "🔇" : "🔊"; muted ? stop() : play();
         };
