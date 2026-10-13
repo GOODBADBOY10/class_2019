@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Takwa Bay Hangout Countdown</title>
+    <style>
+        :root {
+            --c1: #03396c;
+            --c2: #0aa5c0;
+            --ac: #b8f2e6;
+            --speed: 14s;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        html {
+            scroll-padding-top: env(safe-area-inset-top, 0px)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: #fff;
+            background: #03396c;
+            background: linear-gradient(135deg, var(--c1), var(--c2), var(--c1));
+            background-size: 300% 300%;
+            animation: flow var(--speed) ease infinite;
+            min-height: 100vh;
+            transition: background .6s
+        }
+
+        @keyframes flow {
+            0% {
+                background-position: 0 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+
+            100% {
+                background-position: 0 50%
+            }
+        }
+
+        .wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 22px 16px 60px
+        }
+
+        .card {
+            background: rgba(0, 0, 0, .28);
+            border: 1px solid rgba(255, 255, 255, .22);
+            border-radius: 18px;
+            padding: 18px;
+            margin-top: 16px
+        }
+
+        h1 {
+            font-size: clamp(28px, 8vw, 44px);
+            line-height: 1.1;
+            margin: 6px 0
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: var(--ac)
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--ac);
+            color: #111;
+            font-weight: 700;
+            border-radius: 99px;
+            padding: 5px 12px;
+            font-size: 13px
+        }
+
+        .emoji {
+            font-size: 56px;
+            display: block;
+            animation: bob 2s ease-in-out infinite
+        }
+
+        @keyframes bob {
+            50% {
+                transform: translateY(-8px) rotate(6deg)
+            }
+        }
+
+        .cd {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 14px;
+            text-align: center
+        }
+
+        .cd div {
+            background: rgba(0, 0, 0, .35);
+            border-radius: 14px;
+            padding: 12px 2px
+        }
+
+        .cd b {
+            display: block;
+            font-size: clamp(26px, 9vw, 44px);
+            color: var(--ac);
+            font-variant-numeric: tabular-nums
+        }
+
+        .cd span {
+            font-size: 12px;
+            opacity: .9;
+            text-transform: uppercase;
+            letter-spacing: .08em
+        }
+
+        .big {
+            font-size: 19px;
+            font-weight: 700;
+            margin: 4px 0
+        }
+
+        .mission {
+            background: var(--ac);
+            color: #111;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 600;
+            margin-top: 10px
+        }
+
+        .banner {
+            display: none;
+            background: #fff;
+            color: #111;
+            font-weight: 800;
+            text-align: center;
+            border-radius: 14px;
+            padding: 12px;
+            margin-top: 14px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px
+        }
+
+        .grid div {
+            background: rgba(255, 255, 255, .12);
+            border-radius: 12px;
+            padding: 12px
+        }
+
+        .grid small {
+            display: block;
+            opacity: .85
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+            line-height: 1.7
+        }
+
+        .plan li b {
+            color: var(--ac)
+        }
+
+        button {
+            font: inherit;
+            font-weight: 700;
+            border: 0;
+            border-radius: 12px;
+            padding: 13px 16px;
+            background: var(--ac);
+            color: #111;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer
+        }
+
+        input[type=time] {
+            font: inherit;
+            padding: 8px;
+            border-radius: 8px;
+            border: 0;
+            margin-left: 6px
+        }
+
+        .note {
+            font-size: 13px;
+            opacity: .9;
+            margin-top: 8px
+        }
+
+        .upd {
+            border-left: 4px solid var(--ac);
+            padding-left: 10px;
+            margin: 10px 0
+        }
+
+        .fall {
+            position: fixed;
+            top: -40px;
+            font-size: 24px;
+            pointer-events: none;
+            animation: fall linear forwards;
+            z-index: 9
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg)
+            }
+        }
+
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            cursor: pointer
+        }
+
+        #splash h2 {
+            font-size: clamp(26px, 8vw, 40px);
+            color: #fff;
+            margin: 10px 0
+        }
+
+        #splash .go {
+            background: var(--ac);
+            color: #111;
+            font-weight: 800;
+            border-radius: 99px;
+            padding: 14px 26px;
+            margin-top: 16px;
+            animation: bob 1.6s ease-in-out infinite
+        }
+
+        #mute {
+            position: fixed;
+            top: calc(10px + env(safe-area-inset-top, 0px));
+            right: 10px;
+            z-index: 40;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            padding: 0;
+            margin: 0;
+            font-size: 22px;
+            display: none
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+
+            body,
+            .emoji,
+            .fall {
+                animation: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="splash">
+        <span class="emoji" id="semoji">🏖️</span>
+        <h2>Takwa Bay Hangout</h2>
+        <div id="steaser">Class of 2019</div>
+        <div class="go">Tap to enter the vibes 🔥</div>
+    </div>
+    <button id="mute" aria-label="Mute or unmute music">🔊</button>
+    <div class="wrap">
+        <span class="tag">Class of 2019</span>
+        <h1>Takwa Bay Beach Hangout 🏖️</h1>
+        <div>Saturday, December 26th, 2026</div>
+
+        <div class="card" style="text-align:center">
+            <span class="emoji" id="emoji">🌊</span>
+            <div class="tag" id="phase">Phase</div>
+            <div class="cd">
+                <div><b id="d">0</b><span>Days</span></div>
+                <div><b id="h">0</b><span>Hours</span></div>
+                <div><b id="m">0</b><span>Mins</span></div>
+                <div><b id="s">0</b><span>Secs</span></div>
+            </div>
+            <div class="banner" id="banner"></div>
+            <p class="big" id="msg"></p>
+            <div class="mission" id="mission"></div>
+        </div>
+
+        <div class="card">
+            <h2>Key details</h2>
+            <div class="grid">
+                <div><b>Date</b><small>Saturday, Dec 26th</small></div>
+                <div><b>Place</b><small>Takwa Bay Beach</small></div>
+                <div><b>Meeting point</b><small>To be announced</small></div>
+                <div><b>Fees &amp; directions</b><small>To be announced</small></div>
+            </div>
+        </div>
+
+        <div class="card plan">
+            <h2>Plan for the day</h2>
+            <ul>
+                <li><b>Arrival:</b> everyone captured on arrival, then a boat ride with group photos</li>
+                <li><b>Beach games:</b> beach football, girls' volleyball/football and sandcastle contest, mixed final
+                </li>
+                <li><b>Water time:</b> swimming, paddleboarding or surfing, the Vex For U challenge and the B4 B4
+                    challenge in the sea</li>
+                <li><b>Food, drinks and enjoyment:</b> plus discussions</li>
+                <li><b>Class games:</b> class trivia, Who said it?, two truths and a lie</li>
+                <li><b>Party:</b> dance-off with a 2019 playlist, truth or dare</li>
+                <li><b>Open floor:</b> anybody can suggest or do anything</li>
+                <li><b>Closing:</b> fun awards, then group photos to end the day</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>What to bring</h2>
+            <ul>
+                <li>A ball, cards and a speaker</li>
+                <li>Sunscreen and towels</li>
+                <li>Extra clothes and a waterproof phone pouch</li>
+                <li>Life jackets for anyone who isn't a strong swimmer</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Updates</h2>
+            <div id="updates"></div>
+        </div>
+
+        <div class="card">
+            <h2>Get a daily reminder 🔔</h2>
+            <label>Remind me at <input type="time" id="rt" value="08:00"></label>
+            <button id="cal">Download daily reminders for my calendar</button>
+            <div class="note">Open the downloaded file on your phone and tap "Add All". Your Calendar app will then
+                notify you every day until Dec 26th.</div>
+        </div>
+
+        <p style="text-align:center;margin-top:24px">Lfg 🚀🔥 Check the group for more details.</p>
+    </div>
+
+    <script>
+        // ===== Edit this list to post updates (newest first) =====
+        var UPDATES = [
+            { t: "The date is set", m: "Saturday, December 26th at Takwa Bay Beach. Directions, fees and the meeting point will be announced soon." }
+        ];
+        // =========================================================
+        var TARGET = new Date("2026-12-26T00:00:00+01:00");
+        var DAY = 864e5;
+        var themes = [
+            ["#7a1f5c", "#f0602a", "#ffd166", "🌅"], ["#03396c", "#0aa5c0", "#b8f2e6", "🌊"], ["#240046", "#c1008c", "#7cff6b", "🎶"],
+            ["#0b4f3a", "#1aa56b", "#ffe66d", "🌴"], ["#1b1464", "#6a3df0", "#ff9ff3", "🌙"], ["#6b3e0a", "#d98a1c", "#fff1b8", "🏖️"],
+            ["#8a1c3d", "#ff5e78", "#ffe3a3", "🦀"], ["#053b50", "#176b87", "#64ccc5", "🐚"], ["#1d3b0a", "#6fb90f", "#fff275", "🍍"],
+            ["#5a0a0a", "#e8350e", "#ffc857", "🔥"], ["#10306b", "#3d8bff", "#ffe08a", "⛵"], ["#3b0a45", "#b5179e", "#ffd6a5", "💃"]];
+        var pools = {
+            far: ["Still a long way off, but start dreaming of the sea. 🌊", "Class of 2019 is coming back together. Be part of it.", "Good things take time, and this one is worth the wait.", "Tell someone who isn't in the group yet. Everyone must be there.", "Calm before the vibes. Keep the date free.", "The best reunions start with a date on the calendar."],
+            warm: ["The countdown is getting real. Plan your outfit! 👀", "We're warming up. Start thinking about your team name.", "Less talk, more beach plans. Who's bringing the speaker?", "Time is moving. Your swimwear should be too.", "Gist is building up. The group is about to get loud.", "Old friends, new stories. Get ready to catch up."],
+            hype: ["Now we're talking. Clear that schedule. 🚀", "The energy is rising. Start practicing your moves.", "You don't want to be the one who missed this day.", "Fix your fits, fix your mood, and pray for good weather.", "Class of 2019 shows up and shows out. No excuses.", "The vibe is loading. Don't be the one who is late."],
+            fire: ["One week zone. Everything must be set. 🔥", "It's almost time. Check your packing list tonight.", "The beach is calling and we are answering.", "Final prep mode. Tell your people you're not available that day.", "Energy at maximum. Let's rock that day!", "Get your body ready for football, sea and dancing."],
+            final: ["It's basically tomorrow. Charge your phone and your spirit! ⚡", "Pack your bag. No more 'I'll see'.", "The countdown is almost over. LFG!!! 🚀", "Sleep well, because we're going to take over the beach.", "This is it. See you at Takwa Bay!"]
+        };
+        var missions = ["Mission: Send your funniest school memory in the group.", "Mission: Pick your team name and shout it in the chat.", "Mission: Check your swimwear and sunscreen.", "Mission: Practice your Vex For U moves for 5 minutes.", "Mission: Learn the B4 B4 moves and show them off.", "Mission: Message one classmate you haven't spoken to in a while.", "Mission: Send a throwback photo of the class.", "Mission: Share one funny quote from a teacher for the trivia.", "Mission: Make your 2019 playlist suggestion.", "Mission: Start your budget for transport and food.", "Mission: Get a waterproof pouch for your phone.", "Mission: Prepare one fun fact about your life since 2019.", "Mission: Drink water and stay fit for football.", "Mission: Tell the group what game you want in the open floor."];
+        var days = Math.floor(Date.UTC(2026, 11, 26) / DAY) - Math.floor((Date.now() + 36e5) / DAY);
+        var th = themes[((days % 12) + 12) % 12];
+        var root = document.documentElement;
+        root.style.setProperty("--c1", th[0]); root.style.setProperty("--c2", th[1]); root.style.setProperty("--ac", th[2]);
+        document.body.style.backgroundColor = th[0];
+        document.getElementById("emoji").textContent = th[3];
+        var key = days >= 50 ? "far" : days >= 30 ? "warm" : days >= 14 ? "hype" : days >= 7 ? "fire" : "final";
+        var names = { far: "Chill phase", warm: "Warming up", hype: "Hype phase", fire: "Final week", final: "Final days" };
+        var speed = { far: "16s", warm: "12s", hype: "9s", fire: "6s", final: "4s" };
+        root.style.setProperty("--speed", speed[key]);
+        var msg, mis, phase = names[key];
+        if (days < 0) { msg = "What a day! Thank you Class of 2019. Until next time. 💙"; mis = "Mission: Share your best photos in the group."; phase = "Done"; }
+        else if (days === 0) { msg = "TODAY IS THE DAY! 🔥🏖️ See you at Takwa Bay!"; mis = "Mission: Bring your energy and enjoy every second."; phase = "Today"; }
+        else { var p = pools[key]; msg = p[days % p.length]; mis = missions[(days * 5 + 3) % missions.length]; }
+        document.getElementById("msg").textContent = msg;
+        document.getElementById("mission").textContent = mis;
+        document.getElementById("phase").textContent = phase;
+        var ms = { 50: "50 days to go!", 30: "30 days to go!", 14: "2 weeks to go!", 7: "1 week to go!", 3: "3 days to go!", 1: "TOMORROW IS THE DAY!" };
+        if (ms[days]) { var b = document.getElementById("banner"); b.textContent = "🎉 " + ms[days] + " 🎉"; b.style.display = "block"; }
+        function tick() {
+            var l = TARGET - Date.now(); if (l < 0) l = 0;
+            document.getElementById("d").textContent = Math.floor(l / DAY);
+            document.getElementById("h").textContent = Math.floor(l % DAY / 36e5);
+            document.getElementById("m").textContent = Math.floor(l % 36e5 / 6e4);
+            document.getElementById("s").textContent = Math.floor(l % 6e4 / 1e3);
+        }
+        tick(); setInterval(tick, 1000);
+        if (days <= 3 && days >= 0) {
+            var em = ["🎉", "🔥", "✨", "🏖️", "🌊"];
+            for (var i = 0; i < 26; i++) {
+                var f = document.createElement("span"); f.className = "fall"; f.textContent = em[i % 5];
+                f.style.left = Math.random() * 95 + "vw"; f.style.animationDuration = (4 + Math.random() * 5) + "s"; f.style.animationDelay = (Math.random() * 6) + "s"; document.body.appendChild(f);
+            }
+        }
+        var u = document.getElementById("updates");
+        UPDATES.forEach(function (x) { var d = document.createElement("div"); d.className = "upd"; var t = document.createElement("b"); t.textContent = x.t; var m = document.createElement("div"); m.textContent = x.m; d.appendChild(t); d.appendChild(m); u.appendChild(d); });
+        function esc(s) { return s.replace(/\\/g, "\\\\").replace(/,/g, "\\,").replace(/;/g, "\\;").replace(/\n/g, "\\n"); }
+        function makeIcs(time) {
+            var hm = time.split(":"), hh = hm[0], mm = hm[1];
+            var out = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Takwa Bay Countdown//EN", "CALSCALE:GREGORIAN"];
+            var start = Math.max(days, 0);
+            for (var d = start; d >= 0; d--) {
+                var dt = new Date(Date.UTC(2026, 11, 26 - d));
+                var ymd = dt.getUTCFullYear() + ("0" + (dt.getUTCMonth() + 1)).slice(-2) + ("0" + dt.getUTCDate()).slice(-2);
+                var k = d >= 50 ? "far" : d >= 30 ? "warm" : d >= 14 ? "hype" : d >= 7 ? "fire" : "final";
+                var text = d === 0 ? "TODAY IS THE DAY! See you at Takwa Bay!" : pools[k][d % pools[k].length] + "\n" + missions[(d * 5 + 3) % missions.length];
+                var title = d === 0 ? "TODAY: Takwa Bay Hangout 🏖️🔥" : d + (d === 1 ? " day" : " days") + " to Takwa Bay! " + themes[d % 12][3];
+                out.push("BEGIN:VEVENT", "UID:takwa-" + ymd + "@class2019", "DTSTAMP:20261013T000000Z", "DTSTART:" + ymd + "T" + hh + mm + "00", "DURATION:PT15M", "SUMMARY:" + esc(title), "DESCRIPTION:" + esc(text), "BEGIN:VALARM", "TRIGGER:PT0M", "ACTION:DISPLAY", "DESCRIPTION:" + esc(title), "END:VALARM", "END:VEVENT");
+            }
+            out.push("END:VCALENDAR"); return out.join("\r\n");
+        }
+        // ===== Music: song1.mp3 ... song12.mp3 sit beside this file. One song per theme, repeating every 12 days =====
+        var sn = ((days % 12) + 12) % 12 + 1;
+        document.getElementById("semoji").textContent = th[3];
+        document.getElementById("steaser").textContent = days > 0 ? days + (days === 1 ? " day" : " days") + " to go" : days === 0 ? "Today is the day!" : "Class of 2019";
+        var srcs = ["song" + sn + ".mp3", "vibe.mp3"], audio = new Audio(), muted = false, started = false, useB = false, ac, bt;
+        audio.loop = true; audio.preload = "auto";
+        function tone(f, type, dur, vol) { var o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime; o.type = type; o.frequency.value = f; g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur); o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + dur); }
+        function startBeat() {
+            useB = true; if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); if (bt) return;
+            var n = [261.63, 293.66, 329.63, 392, 440, 523.25], st = 0;
+            bt = setInterval(function () {
+                if (st % 4 === 0) tone(70, "sine", 0.25, 0.5);
+                if (st % 8 === 0) tone(130.81, "sawtooth", 0.5, 0.08);
+                tone(n[(st * 3 + (st >> 3)) % 6], "triangle", 0.28, 0.1); st++;
+            }, 300);
+        }
+        audio.onerror = function () {
+            var i = srcs.indexOf(audio.getAttribute("src"));
+            if (i >= 0 && i < srcs.length - 1) { audio.src = srcs[i + 1]; if (!muted) audio.play().catch(function () { }); }
+            else if (!muted) { startBeat(); }
+        };
+        function play() { if (useB) { if (ac) ac.resume(); } else audio.play().catch(function () { }); }
+        function stop() { if (useB) { if (ac) ac.suspend(); } else audio.pause(); }
+        document.getElementById("splash").onclick = function () {
+            this.style.display = "none"; started = true;
+            var mb = document.getElementById("mute"); mb.style.display = "block";
+            audio.src = srcs[0]; audio.play().catch(function () { });
+        };
+        document.getElementById("mute").onclick = function () {
+            muted = !muted; this.textContent = muted ? "🔇" : "🔊"; muted ? stop() : play();
+        };
+        document.addEventListener("visibilitychange", function () {
+            if (!started) return;
+            if (document.hidden) stop(); else if (!muted) play();
+        });
+        document.getElementById("cal").onclick = function () {
+            var blob = new Blob([makeIcs(document.getElementById("rt").value || "08:00")], { type: "text/calendar" });
+            var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "takwa-bay-countdown.ics";
+            document.body.appendChild(a); a.click(); a.remove();
+        };
+    </script>
+</body>
+
+</html>
