@@ -480,6 +480,114 @@
             document.body.appendChild(a); a.click(); a.remove();
         };
     </script>
+
+
+<!-- ===== WOW PACK: paste this whole block just before </body> in your page ===== -->
+<style>
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+.wrap{position:relative;z-index:1;padding-bottom:110px}
+.reveal{opacity:0;transform:translateY(60px) scale(.94) rotateX(12deg);transition:opacity .8s,transform .9s cubic-bezier(.2,.9,.3,1.2)}
+.reveal.in{opacity:1;transform:none}
+.card{transition:transform .25s ease-out,box-shadow .3s;transform-style:preserve-3d}
+.card:hover{box-shadow:0 0 30px var(--ac)}
+h1 .ch{display:inline-block;white-space:pre;animation:wavy 2.4s ease-in-out infinite;text-shadow:0 0 18px var(--ac)}
+@keyframes wavy{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px) rotate(-3deg)}}
+.cd b.pop{animation:pop .5s ease-out}
+@keyframes pop{0%{transform:scale(1.5) rotateX(90deg);opacity:.3;text-shadow:0 0 25px #fff}100%{transform:none;opacity:1}}
+.tag{animation:glow 2s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 22px var(--ac)}}
+.cd div{animation:float 3s ease-in-out infinite}
+.cd div:nth-child(2){animation-delay:.3s}.cd div:nth-child(3){animation-delay:.6s}.cd div:nth-child(4){animation-delay:.9s}
+@keyframes float{50%{transform:translateY(-6px)}}
+.emoji.spin{animation:spin .9s ease-in-out}
+@keyframes spin{to{transform:rotate(720deg) scale(1.4)}}
+#splash h2{animation:zoomy 2s ease-in-out infinite;text-shadow:0 0 30px #fff}
+@keyframes zoomy{50%{transform:scale(1.08)}}
+.rip{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px;border:3px solid rgba(255,255,255,.7);border-radius:50%;animation:rip 3.6s ease-out infinite;pointer-events:none}
+@keyframes rip{from{transform:scale(1);opacity:.9}to{transform:scale(18);opacity:0}}
+#portal{position:fixed;inset:0;z-index:55;pointer-events:none;background:radial-gradient(circle,var(--ac),var(--c2) 50%,var(--c1));animation:portal 1s ease-in forwards}
+@keyframes portal{from{opacity:1;clip-path:circle(75% at 50% 50%)}to{opacity:0;clip-path:circle(0% at 50% 50%)}}
+.waves{position:fixed;left:0;bottom:0;width:100%;height:90px;z-index:3;pointer-events:none;overflow:hidden}
+.waves svg{position:absolute;bottom:0;left:0;width:200%;height:100%;animation:wv 9s linear infinite}
+.waves svg:nth-child(2){animation-duration:6s;animation-direction:reverse;opacity:.6;height:75%}
+.waves svg:nth-child(3){animation-duration:13s;opacity:.35;height:100%}
+@keyframes wv{to{transform:translateX(-50%)}}
+.sail,.crab{position:fixed;z-index:4;pointer-events:none;font-size:34px}
+.sail{bottom:62px;left:-60px;animation:sail 22s linear infinite,bobb 2s ease-in-out infinite}
+.crab{bottom:8px;right:-60px;animation:crab 16s linear infinite}
+@keyframes sail{to{left:110vw}}
+@keyframes bobb{50%{margin-bottom:10px;rotate:8deg}}
+@keyframes crab{0%{right:-60px;transform:translateX(0)}to{right:110vw}}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}h1 .ch,.cd div,.tag,.rip,.sail,.crab,.waves svg{animation:none}}
+.card.reveal{transition:opacity .8s,transform .9s cubic-bezier(.2,.9,.3,1.2),box-shadow .3s}
+.card.reveal.in{transition:transform .25s ease-out,box-shadow .3s}
+</style>
+
+<canvas id="fx"></canvas>
+<div class="waves" id="waves"></div>
+<div class="sail">⛵</div><div class="crab">🦀</div>
+
+<script>
+(function(){
+var RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+var cv=document.getElementById("fx"),cx=cv.getContext("2d"),W,H,P=[],B=[];
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}rs();addEventListener("resize",rs);
+function cs(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()||"#fff"}
+// ambient bubbles
+if(!RM)for(var i=0;i<28;i++)B.push({x:Math.random()*W,y:Math.random()*H,r:3+Math.random()*12,v:.3+Math.random()*.9,p:Math.random()*6});
+// particles: confetti, emoji, sparkles
+function burst(x,y,n,emo){
+ var cols=["#fff",cs("--ac"),cs("--c2"),"#ffd166","#ff5e78"],e=["🎉","🔥","✨","🏖️","🌊","💙","🦀"];
+ for(var i=0;i<n;i++){var a=Math.random()*6.28,s=3+Math.random()*(emo?8:12);
+  P.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,g:.18,life:1,d:.008+Math.random()*.008,rot:Math.random()*6,vr:(Math.random()-.5)*.4,
+   c:cols[i%5],t:emo?e[i%7]:null,sz:emo?22:6+Math.random()*7})}
+}
+function spark(x,y){P.push({x:x,y:y,vx:(Math.random()-.5)*2,vy:Math.random()*-2,g:.05,life:1,d:.03,rot:0,vr:0,c:cs("--ac"),t:"✨",sz:14})}
+function loop(t){
+ cx.clearRect(0,0,W,H);
+ for(var i=0;i<B.length;i++){var b=B[i];b.y-=b.v;b.x+=Math.sin(t/900+b.p)*.6;if(b.y<-20){b.y=H+20;b.x=Math.random()*W}
+  cx.globalAlpha=.22;cx.strokeStyle="#fff";cx.lineWidth=1.5;cx.beginPath();cx.arc(b.x,b.y,b.r,0,6.28);cx.stroke();
+  cx.beginPath();cx.arc(b.x-b.r/3,b.y-b.r/3,b.r/5,0,6.28);cx.fillStyle="#fff";cx.fill()}
+ for(i=P.length-1;i>=0;i--){var p=P[i];p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.rot+=p.vr;p.life-=p.d;
+  if(p.life<=0||p.y>H+30){P.splice(i,1);continue}
+  cx.globalAlpha=Math.min(1,p.life*1.5);cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot);
+  if(p.t){cx.font=p.sz+"px serif";cx.fillText(p.t,-p.sz/2,p.sz/2)}else{cx.fillStyle=p.c;cx.fillRect(-p.sz/2,-p.sz/4,p.sz,p.sz/2)}
+  cx.restore()}
+ cx.globalAlpha=1;requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+if(RM)return;
+// splash ripples + entry blast
+var sp=document.getElementById("splash");
+for(i=0;i<5;i++){var r=document.createElement("div");r.className="rip";r.style.animationDelay=i*.72+"s";sp.appendChild(r)}
+sp.addEventListener("click",function(e){
+ var pt=document.createElement("div");pt.id="portal";document.body.appendChild(pt);setTimeout(function(){pt.remove()},1100);
+ burst(e.clientX||W/2,e.clientY||H/2,160,false);
+ setTimeout(function(){burst(W*.2,H*.9,40,true);burst(W*.8,H*.9,40,true);burst(W/2,H*.5,50,true)},250);
+});
+// tap anywhere = emoji pop, drag = sparkle trail
+addEventListener("pointerdown",function(e){if(e.target.closest("button,input,#splash"))return;burst(e.clientX,e.clientY,14,true)});
+addEventListener("pointermove",function(e){if(Math.random()<.4)spark(e.clientX,e.clientY)});
+// waves
+var wp='<svg viewBox="0 0 1200 100" preserveAspectRatio="none"><path fill="COL" d="M0 50 Q150 0 300 50 T600 50 T900 50 T1200 50 V100 H0Z"/></svg>';
+document.getElementById("waves").innerHTML=wp.replace("COL","rgba(255,255,255,.25)")+wp.replace("COL","rgba(0,0,0,.25)")+wp.replace("COL",cs("--c1"));
+// wavy title
+var h1=document.querySelector("h1"),txt=h1.textContent;h1.textContent="";
+// Array.from(txt).forEach(function(c,k){
+(window.Intl&&Intl.Segmenter?Array.from(new Intl.Segmenter().segment(txt),function(s){return s.segment}):Array.from(txt)).forEach(function(c,k){   var s=document.createElement("span");s.className="ch";s.textContent=c;s.style.animationDelay=k*.07+"s";h1.appendChild(s)});
+// countdown digit pop
+["d","h","m","s"].forEach(function(id){var el=document.getElementById(id);
+ new MutationObserver(function(){el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop")}).observe(el,{childList:true})});
+// scroll reveal + 3D tilt
+var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}})},{threshold:.15});
+document.querySelectorAll(".card").forEach(function(c,k){c.classList.add("reveal");c.style.transitionDelay=(k%3)*.08+"s";io.observe(c);
+ c.addEventListener("pointermove",function(e){if(e.pointerType!=="mouse"||!c.classList.contains("in"))return;var b=c.getBoundingClientRect();
+  c.style.transitionDelay="0s";c.style.transform="perspective(700px) rotateY("+((e.clientX-b.left)/b.width-.5)*10+"deg) rotateX("+(-((e.clientY-b.top)/b.height-.5))*10+"deg)"});
+ c.addEventListener("pointerleave",function(){if(c.classList.contains("in"))c.style.transform=""})});
+// emoji click = crazy spin
+document.getElementById("emoji").addEventListener("click",function(){var el=this;el.classList.remove("spin");void el.offsetWidth;el.classList.add("spin");setTimeout(function(){el.classList.remove("spin")},950)});
+})();
+</script>
+<!-- ===== END WOW PACK ===== -->
 </body>
 
 </html>
